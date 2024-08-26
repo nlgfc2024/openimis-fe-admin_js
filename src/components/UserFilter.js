@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import _debounce from "lodash/debounce";
+import { connect } from "react-redux";
 
 import { withTheme, withStyles } from "@material-ui/core/styles";
 import { injectIntl } from "react-intl";
@@ -13,7 +14,7 @@ import {
   TextInput,
   formatMessage,
 } from "@openimis/fe-core";
-import { DEFAULT } from "../constants";
+import { DEFAULT, RIGHT_HEALTHFACILITIES } from "../constants";
 
 const styles = (theme) => ({
   dialogTitle: theme.dialog.title,
@@ -222,7 +223,7 @@ class UserFilter extends Component {
   );
 
   render() {
-    const { classes, filters, onChangeFilters, intl } = this.props;
+    const { classes, filters, onChangeFilters, intl, rights } = this.props;
     const { locationFilters, currentUserType, currentUserRoles, selectedDistrict } = this.state;
     return (
       <section className={classes.form}>
@@ -253,29 +254,30 @@ class UserFilter extends Component {
               </Grid>
             }
           />
-          <ControlledField
-            module="admin"
-            id="userFilter.healthFacility"
-            field={
-              <Grid item xs={3} className={classes.item}>
-                <PublishedComponent
-                  pubRef="location.HealthFacilityPicker"
-                  withNull={true}
-                  value={this.filterValue("healthFacilityId") || ""}
-                  district={selectedDistrict}
-                  onChange={(v) => {
-                    onChangeFilters([
-                      {
-                        id: "healthFacility",
-                        value: v,
-                        filter: v ? `healthFacilityId: ${decodeId(v.id)}` : null,
-                      },
-                    ]);
-                  }}
-                />
-              </Grid>
-            }
-          />
+          { rights.includes(RIGHT_HEALTHFACILITIES) && (<ControlledField
+              module="admin"
+              id="userFilter.healthFacility"
+              field={
+                <Grid item xs={3} className={classes.item}>
+                  <PublishedComponent
+                    pubRef="location.HealthFacilityPicker"
+                    withNull={true}
+                    value={this.filterValue("healthFacilityId") || ""}
+                    district={selectedDistrict}
+                    onChange={(v) => {
+                      onChangeFilters([
+                        {
+                          id: "healthFacility",
+                          value: v,
+                          filter: v ? `healthFacilityId: ${decodeId(v.id)}` : null,
+                        },
+                      ]);
+                    }}
+                  />
+                </Grid>
+              }
+            />
+          )}
         </Grid>
         <Grid container>
           <Grid item xs={12}>
@@ -439,4 +441,9 @@ class UserFilter extends Component {
   }
 }
 
-export default withModulesManager(injectIntl(withTheme(withStyles(styles)(UserFilter))));
+const mapStateToProps = (state) => ({
+  rights: state.core?.user?.i_user?.rights ?? [],
+  module: state.core?.savedPagination?.module,
+});
+
+export default withModulesManager(connect(mapStateToProps)(injectIntl(withTheme(withStyles(styles)(UserFilter)))));

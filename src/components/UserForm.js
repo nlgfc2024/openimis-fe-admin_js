@@ -18,7 +18,7 @@ import {
   coreConfirm,
   parseData,
 } from "@openimis/fe-core";
-import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, INTERACTIVE_USER_TYPE, RIGHT_USERS } from "../constants";
+import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, INTERACTIVE_USER_TYPE, RIGHT_USERS, RIGHT_CLAIMADMINISTRATOR } from "../constants";
 import EnrolmentOfficerFormPanel from "./EnrolmentOfficerFormPanel";
 import ClaimAdministratorFormPanel from "./ClaimAdministratorFormPanel";
 import {
@@ -251,7 +251,7 @@ class UserForm extends Component {
             readOnly={readOnly || isInMutation || user?.validityTo}
             actions={actions}
             HeadPanel={UserMasterPanel}
-            Panels={[EnrolmentOfficerFormPanel, ClaimAdministratorFormPanel]}
+            Panels={[EnrolmentOfficerFormPanel, ...(rights.includes(RIGHT_CLAIMADMINISTRATOR) ? [ClaimAdministratorFormPanel] : []) ]}
             user={user}
             onEditedChanged={this.onEditedChanged}
             canSave={!user.validityTo && this.canSave}
