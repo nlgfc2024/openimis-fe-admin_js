@@ -16,7 +16,7 @@ import {
   passwordGenerator,
   validatePassword,
 } from "@openimis/fe-core";
-import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN, DEFAULT } from "../constants";
+import { CLAIM_ADMIN_USER_TYPE, ENROLMENT_OFFICER_USER_TYPE, EMAIL_REGEX_PATTERN, DEFAULT, RIGHT_HEALTHFACILITIES } from "../constants";
 import {
   usernameValidationCheck,
   usernameValidationClear,
@@ -62,6 +62,7 @@ const UserMasterPanel = (props) => {
     savedUserEmail,
     usernameLength,
     passwordPolicy,
+    rights,
   } = props;
   const { formatMessage, formatMessageWithValues } = useTranslations("admin", modulesManager);
   const dispatch = useDispatch();
@@ -240,17 +241,18 @@ const UserMasterPanel = (props) => {
             />
           </Grid>
         )}
-      <Grid item xs={4} className={classes.item}>
-        <PublishedComponent
-          pubRef="location.HealthFacilityPicker"
-          value={edited?.healthFacility}
-          district={edited.districts}
-          module="admin"
-          readOnly={readOnly}
-          required={edited.userTypes.includes(CLAIM_ADMIN_USER_TYPE)}
-          onChange={(healthFacility) => onEditedChanged({ ...edited, healthFacility })}
-        />
-      </Grid>
+      { rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid item xs={4} className={classes.item}>
+          <PublishedComponent
+            pubRef="location.HealthFacilityPicker"
+            value={edited?.healthFacility}
+            district={edited.districts}
+            module="admin"
+            readOnly={readOnly}
+            required={edited.userTypes.includes(CLAIM_ADMIN_USER_TYPE)}
+            onChange={(healthFacility) => onEditedChanged({ ...edited, healthFacility })}
+          />
+        </Grid>
+      )}
       <Grid item xs={6} className={classes.item}>
         <PublishedComponent
           pubRef="admin.UserRolesPicker"
@@ -366,6 +368,7 @@ const UserMasterPanel = (props) => {
 };
 
 const mapStateToProps = (state) => ({
+  rights: state.core?.user?.i_user?.rights ?? [],
   isUsernameValid: state.admin.validationFields?.username?.isValid,
   isUsernameValidating: state.admin.validationFields?.username?.isValidating,
   usernameValidationError: state.admin.validationFields?.username?.validationError,
