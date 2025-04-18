@@ -18,13 +18,13 @@ import {
   coreConfirm,
   parseData,
 } from "@openimis/fe-core";
-import {
-  CLAIM_ADMIN_USER_TYPE,
-  ENROLMENT_OFFICER_USER_TYPE,
-  INTERACTIVE_USER_TYPE,
-  RIGHT_USERS,
-  RIGHT_CLAIMADMINISTRATOR,
-  RIGHT_ENROLMENTOFFICER
+import { 
+  CLAIM_ADMIN_USER_TYPE, 
+  ENROLMENT_OFFICER_USER_TYPE, 
+  INTERACTIVE_USER_TYPE, 
+  RIGHT_USERS, 
+  RIGHT_CLAIMADMINISTRATOR, 
+  RIGHT_ENROLMENTOFFICER 
 } from "../constants";
 import EnrolmentOfficerFormPanel from "./EnrolmentOfficerFormPanel";
 import ClaimAdministratorFormPanel from "./ClaimAdministratorFormPanel";
@@ -263,7 +263,7 @@ class UserForm extends Component {
             actions={actions}
             HeadPanel={UserMasterPanel}
             Panels={[
-              ...(rights.includes(RIGHT_ENROLMENTOFFICER) ? [EnrolmentOfficerFormPanel] : []),
+              ...(rights.includes(RIGHT_ENROLMENTOFFICER) ? [EnrolmentOfficerFormPanel] : []), 
               ...(rights.includes(RIGHT_CLAIMADMINISTRATOR) ? [ClaimAdministratorFormPanel] : [])
             ]}
             user={user}
