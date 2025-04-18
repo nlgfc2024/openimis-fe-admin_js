@@ -109,7 +109,8 @@ const UserMasterPanel = (props) => {
   const [passwordFeedback, setPasswordFeedback] = useState("");
   const [passwordScore, setPasswordScore] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
-  const IS_PASSWORD_SECURED = passwordScore >= 2;
+  const REQUIRED_SECURITY_LEVEL = 2;
+  let IS_PASSWORD_SECURED = passwordScore >= REQUIRED_SECURITY_LEVEL;
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
@@ -120,7 +121,8 @@ const UserMasterPanel = (props) => {
     const { feedback, score } = validatePassword(password, passwordPolicy, formatMessage, formatMessageWithValues);
     setPasswordFeedback(feedback);
     setPasswordScore(score);
-    onEditedChanged({ ...edited, password });
+    IS_PASSWORD_SECURED = score >= REQUIRED_SECURITY_LEVEL;
+    onEditedChanged({ ...edited, password, isPasswordValid: IS_PASSWORD_SECURED });
   };
 
   const generatePassword = () => {
@@ -132,7 +134,8 @@ const UserMasterPanel = (props) => {
       isSpecialSymbolRequired: true,
     });
     const generatedPassword = passwordGenerator(passwordGeneratorOptions);
-    onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword });
+    IS_PASSWORD_SECURED = true;
+    onEditedChanged({ ...edited, password: generatedPassword, confirmPassword: generatedPassword, isPasswordValid: IS_PASSWORD_SECURED });
   };
 
   const renderLastNameField = (edited, classes, readOnly) => (
@@ -241,17 +244,17 @@ const UserMasterPanel = (props) => {
             />
           </Grid>
         )}
-      { rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid item xs={4} className={classes.item}>
-          <PublishedComponent
-            pubRef="location.HealthFacilityPicker"
-            value={edited?.healthFacility}
-            district={edited.districts}
-            module="admin"
-            readOnly={readOnly}
-            required={edited.userTypes.includes(CLAIM_ADMIN_USER_TYPE)}
-            onChange={(healthFacility) => onEditedChanged({ ...edited, healthFacility })}
-          />
-        </Grid>
+      {rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid item xs={4} className={classes.item}>
+        <PublishedComponent
+          pubRef="location.HealthFacilityPicker"
+          value={edited?.healthFacility}
+          district={edited.districts}
+          module="admin"
+          readOnly={readOnly}
+          required={edited.userTypes.includes(CLAIM_ADMIN_USER_TYPE)}
+          onChange={(healthFacility) => onEditedChanged({ ...edited, healthFacility })}
+        />
+      </Grid>
       )}
       <Grid item xs={6} className={classes.item}>
         <PublishedComponent
@@ -344,6 +347,7 @@ const UserMasterPanel = (props) => {
           readOnly={readOnly}
           value={edited.confirmPassword}
           onChange={(confirmPassword) => onEditedChanged({ ...edited, confirmPassword })}
+          error={edited?.password !== edited?.confirmPassword}
           endAdornment={
             <InputAdornment position="end">
               <IconButton

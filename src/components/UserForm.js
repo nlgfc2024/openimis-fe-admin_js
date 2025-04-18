@@ -51,8 +51,8 @@ const setupState = (props) => ({
   isLocked: false,
   user: !props?.userId
     ? {
-        userTypes: [INTERACTIVE_USER_TYPE],
-      }
+      userTypes: [INTERACTIVE_USER_TYPE],
+    }
     : props.user,
   isSaved: false,
   reset: 0,
@@ -177,7 +177,11 @@ class UserForm extends Component {
       )
     )
       return false;
+
+    if (!user.id && !user.password) return false;
     if (user.password && user.password !== user.confirmPassword) return false;
+    if (user.password && !user.isPasswordValid) return false;
+
     if (user.userTypes?.includes(CLAIM_ADMIN_USER_TYPE) && !user.healthFacility) return false;
     if (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && !user.officerVillages) return false;
     if (
@@ -260,7 +264,7 @@ class UserForm extends Component {
             HeadPanel={UserMasterPanel}
             Panels={[
               ...(rights.includes(RIGHT_ENROLMENTOFFICER) ? [EnrolmentOfficerFormPanel] : []), 
-              ...(rights.includes(RIGHT_CLAIMADMINISTRATOR) ? [ClaimAdministratorFormPanel] : []) 
+              ...(rights.includes(RIGHT_CLAIMADMINISTRATOR) ? [ClaimAdministratorFormPanel] : [])
             ]}
             user={user}
             onEditedChanged={this.onEditedChanged}
