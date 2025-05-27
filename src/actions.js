@@ -29,7 +29,7 @@ export function fetchUsers(mm, filters = [], restrictHealthFacility = true) {
       const state = getState();
       const hf = state.loc.userHealthFacilityFullPath;
       if (hf) {
-        filters.push(`healthFacility_Uuid: "${hf.uuid}"`);
+        filters.push(`healthFacilityId: ${decodeId(hf.id)}`);
       }
     }
 
