@@ -165,7 +165,7 @@ class UserSearcher extends Component {
               {formatMessage(this.props.intl, "admin.user", "openNewTab.buttonText")}
             </Button>
           </Tooltip>
-          {this.props.rights.includes(RIGHT_USER_DELETE) ? null : (
+          {this.props.rights.includes(RIGHT_USER_DELETE) && (
             <Tooltip title={formatMessage(this.props.intl, "admin.user", "deleteUser.tooltip")}>
               <IconButton onClick={() => this.setState({ deleteUser: u })}>
                 <DeleteIcon />
