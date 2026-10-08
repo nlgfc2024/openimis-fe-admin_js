@@ -5,7 +5,7 @@ import { injectIntl } from "react-intl";
 
 import { IconButton, Button, Tooltip } from "@material-ui/core";
 import { withTheme, withStyles } from "@material-ui/core/styles";
-import { Tab as TabIcon, Delete as DeleteIcon } from "@material-ui/icons";
+import { Tab as TabIcon, Delete as DeleteIcon, Add as AddIcon } from "@material-ui/icons";
 
 import {
   withModulesManager,
@@ -17,7 +17,7 @@ import {
   decodeId,
 } from "@openimis/fe-core";
 import { fetchUsersSummaries, deleteUser } from "../actions";
-import { DEFAULT, RIGHT_USER_DELETE } from "../constants";
+import { DEFAULT, RIGHT_USER_ADD, RIGHT_USER_DELETE } from "../constants";
 import UserFilter from "./UserFilter";
 
 const USER_SEARCHER_CONTRIBUTION_KEY = "user.UserSearcher";
@@ -65,6 +65,19 @@ class UserSearcher extends Component {
     const aligns = this.getHeaders().map(() => null);
     aligns.splice(-1, 1, "right");
     return aligns;
+  };
+
+  searcherActions = () => {
+    const { intl, onAdd, rights } = this.props;
+    return [
+      {
+        label: formatMessage(intl, "admin.user", "addNewUser.tooltip"),
+        icon: <AddIcon />,
+        authorized: rights.includes(RIGHT_USER_ADD),
+        onClick: onAdd,
+        variant: "contained",
+      },
+    ];
   };
 
   fetch = (params) => {
@@ -204,6 +217,9 @@ class UserSearcher extends Component {
           rowDisabled={(_, i) => i.clientMutationId}
           rowLocked={(_, i) => i.clientMutationId}
           onDoubleClick={onDoubleClick}
+          enableActionButtons
+          searcherActionsPosition="header-right"
+          searcherActions={this.searcherActions()}
         />
       </>
     );
@@ -211,7 +227,7 @@ class UserSearcher extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  rights: state.core?.i_user?.rights ?? [],
+  rights: state.core?.user?.i_user?.rights ?? [],
   users: state.admin.usersSummaries.items,
   usersPageInfo: state.admin.usersSummaries.pageInfo,
   fetchingUsers: state.admin.usersSummaries.isFetching,
