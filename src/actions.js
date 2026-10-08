@@ -16,7 +16,6 @@ const USER_SUMMARY_PROJECTION = [
   "officer{id,dob,phone,lastName,otherNames,email}",
   "iUser{id,phone,lastName,otherNames,email,roles{id,name}}",
   "claimAdmin{id,phone,lastName,otherNames,emailId,dob}",
-  "validityTo",
   "clientMutationId",
 ];
 const DISTRICT_DATA_FETCH_PARAMS = "id, uuid, code, name, parent { id, uuid, name, code }";
@@ -173,7 +172,6 @@ export function fetchUser(mm, userId, clientMutationId) {
             clientMutationId
             id
             username
-            validityTo
             officer {
               id
               uuid
@@ -221,8 +219,6 @@ export function fetchUser(mm, userId, clientMutationId) {
               otherNames
               roles { id name isSystem}
               healthFacility ${mm.getProjection("location.HealthFacilityPicker.projection")}
-              validityFrom
-              validityTo
               email
               districts: userdistrictSet { location { id name code uuid parent { id code uuid name }}}
             }
