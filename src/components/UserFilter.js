@@ -287,6 +287,7 @@ class UserFilter extends Component {
               filters={filters}
               onChangeFilters={onChangeFilters}
               anchor="parentLocation"
+              pickersForAllLevels
             />
           </Grid>
         </Grid>
