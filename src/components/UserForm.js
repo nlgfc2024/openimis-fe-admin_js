@@ -182,12 +182,12 @@ class UserForm extends Component {
     if (user.password && user.password !== user.confirmPassword) return false;
     if (user.password && !user.isPasswordValid) return false;
 
-    const showHealthFacilityFilter = this.props.modulesManager.getConf(
+    const showHealthFacility = this.props.modulesManager.getConf(
       "fe-admin",
-      "show_health_facility_filter",
+      "show_health_facility",
       true,
     );
-    if (showHealthFacilityFilter && user.userTypes?.includes(CLAIM_ADMIN_USER_TYPE) && !user.healthFacility) return false;
+    if (showHealthFacility && user.userTypes?.includes(CLAIM_ADMIN_USER_TYPE) && !user.healthFacility) return false;
     if (user.userTypes?.includes(ENROLMENT_OFFICER_USER_TYPE) && !user.officerVillages) return false;
     if (
       (this.props.obligatory_user_fields?.phone === "M" ||
