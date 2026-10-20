@@ -82,6 +82,11 @@ class UserFilter extends Component {
       "renderLastNameFirst",
       DEFAULT.RENDER_LAST_NAME_FIRST,
     );
+    this.showHealthFacilityFilter = props.modulesManager.getConf(
+      "fe-admin",
+      "show_health_facility_filter",
+      true,
+    );
   }
 
   state = {
@@ -254,7 +259,7 @@ class UserFilter extends Component {
               </Grid>
             }
           />
-          { rights.includes(RIGHT_HEALTHFACILITIES) && (<ControlledField
+          { this.showHealthFacilityFilter && rights.includes(RIGHT_HEALTHFACILITIES) && (<ControlledField
               module="admin"
               id="userFilter.healthFacility"
               field={

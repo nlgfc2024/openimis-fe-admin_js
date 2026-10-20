@@ -76,6 +76,11 @@ const UserMasterPanel = (props) => {
     "renderLastNameFirst",
     DEFAULT.RENDER_LAST_NAME_FIRST,
   );
+  const showHealthFacilityFilter = modulesManager.getConf(
+    "fe-admin",
+    "show_health_facility_filter",
+    true,
+  );
 
   const shouldValidateUsername = (inputValue) => {
     const shouldBeValidated = inputValue !== savedUsername;
@@ -244,7 +249,7 @@ const UserMasterPanel = (props) => {
             />
           </Grid>
         )}
-      {rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid item xs={4} className={classes.item}>
+      {showHealthFacilityFilter && rights.includes(RIGHT_HEALTHFACILITIES) && (<Grid item xs={4} className={classes.item}>
         <PublishedComponent
           pubRef="location.HealthFacilityPicker"
           value={edited?.healthFacility}
