@@ -211,6 +211,7 @@ class UserSearcher extends Component {
           filtersToQueryParams={this.filtersToQueryParams}
           defaultOrderBy="-username"
           headers={this.getHeaders}
+          columnWidths={['16%', '15%', '15%', '18%', '12%', undefined, '180px']}
           aligns={this.getAligns}
           itemFormatters={this.itemFormatters}
           sorts={this.getSorts}
