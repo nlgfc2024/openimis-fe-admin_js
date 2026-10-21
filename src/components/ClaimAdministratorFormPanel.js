@@ -14,6 +14,11 @@ const styles = (theme) => ({
 const ClaimAdministratorFormPanel = (props) => {
   const { edited, classes, modulesManager, onEditedChanged, readOnly } = props;
   const { formatMessage } = useTranslations("admin.ClaimAdministratorFormPanel", modulesManager);
+  const showHealthFacility = modulesManager.getConf(
+    "fe-admin",
+    "show_health_facility",
+    true,
+  );
   const hasClaimUserType = edited.userTypes?.includes(CLAIM_ADMIN_USER_TYPE);
   const hasClaimRole = edited.roles
     ? edited.roles.filter((x) => x.isSystem === CLAIM_ADMIN_IS_SYSTEM).length !== 0
@@ -89,7 +94,7 @@ const ClaimAdministratorFormPanel = (props) => {
                 onChange={(birthDate) => onEditedChanged({ ...edited, birthDate })}
               />
             </Grid>
-            <Grid item xs={4} className={classes.item}>
+            {showHealthFacility && (<Grid item xs={4} className={classes.item}>
               <PublishedComponent
                 pubRef="location.HealthFacilityPicker"
                 value={edited?.healthFacility}
@@ -99,7 +104,7 @@ const ClaimAdministratorFormPanel = (props) => {
                 readOnly={readOnly}
                 onChange={(healthFacility) => onEditedChanged({ ...edited, healthFacility })}
               />
-            </Grid>
+            </Grid>)}
           </Grid>
         </Grid>
       )}
